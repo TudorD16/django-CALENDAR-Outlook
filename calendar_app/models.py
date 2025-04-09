@@ -14,7 +14,7 @@ class CalendarGroup(models.Model):
 class Event(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(CalendarGroup, on_delete=models.CASCADE, null=True, blank=True)
-    specific_members = models.ManyToManyField(User, related_name='specific_events', blank=True)
+    specific_members = models.ManyToManyField(User, related_name='assigned_events', blank=True)
     is_group_wide = models.BooleanField(default=True, help_text="If checked, event is for all group members")
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
