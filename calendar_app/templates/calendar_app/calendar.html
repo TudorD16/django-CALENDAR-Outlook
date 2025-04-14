@@ -32,6 +32,9 @@
         {% endif %}
         {% block content %}
         <div id='calendar'></div>
+        <a href="{% url 'export-calendar' %}" class="btn btn-success">
+            Export Calendar to Outlook
+        </a>
         {% endblock %}
     </div>
     {% block extra_js %}
