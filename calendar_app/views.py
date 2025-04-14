@@ -406,3 +406,4 @@ def export_calendar(request):
     response = HttpResponse(cal.to_ical(), content_type='text/calendar')
     response['Content-Disposition'] = 'attachment; filename="calendar.ics"'
     return response
+
