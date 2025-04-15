@@ -38,9 +38,14 @@
         {% endif %}
         {% block content %}
         <div id='calendar'></div>
-        <a href="{% url 'export-calendar' %}" class="btn btn-success">
-            Export Calendar to Outlook
-        </a>
+        <div class="d-flex gap-2 mt-3">
+            <a href="{% url 'export-calendar' %}" class="btn btn-success">
+                Export Calendar to Outlook
+            </a>
+            <a href="webcal://{{ request.get_host }}{% url 'serve-calendar' %}" class="btn btn-primary" id="webcalLink">
+                Subscribe to Calendar
+            </a>
+        </div>
         {% endblock %}
     </div>
     {% block extra_js %}
@@ -65,6 +70,23 @@
             }
         });
         calendar.render();
+    });
+
+    document.getElementById('webcalLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        let href = this.getAttribute('href');
+        
+        // Replace http:// with webcal:// if needed
+        if (href.startsWith('http://')) {
+            href = href.replace('http://', 'webcal://');
+        }
+        
+        // Force SSL for production
+        if (window.location.protocol === 'https:') {
+            href = href.replace('webcal://', 'webcals://');
+        }
+        
+        window.location.href = href;
     });
     </script>
     {% endblock %}

@@ -20,4 +20,5 @@ urlpatterns = [
     path('api/search-users/', views.search_users, name='search-users'),
     path('store-opening/create/', views.store_opening_create, name='store-opening-create'),
     path('export-calendar/', views.export_calendar, name='export-calendar'),
+    path('calendar.ics', views.serve_calendar, name='serve-calendar'),
 ]

@@ -14,6 +14,10 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from icalendar import Calendar, Event as CalendarEvent
 from django.http import HttpResponse
+from icalendar import Calendar, Event as ICalEvent
+from datetime import datetime
+from django.http import HttpResponse
+from django.utils import timezone
 
 def register(request):
     if request.method == 'POST':
@@ -407,3 +411,36 @@ def export_calendar(request):
     response['Content-Disposition'] = 'attachment; filename="calendar.ics"'
     return response
 
+def serve_calendar(request):
+    # Create calendar
+    cal = Calendar()
+    cal.add('prodid', '-//Calendar App//EN//')
+    cal.add('version', '2.0')
+    cal.add('calscale', 'GREGORIAN')
+    cal.add('method', 'PUBLISH')
+    cal.add('x-wr-calname', 'My Calendar')
+    cal.add('x-wr-timezone', 'UTC')
+    
+    # Get all events
+    events = Event.objects.all()
+    
+    for event in events:
+        ical_event = ICalEvent()
+        ical_event.add('summary', event.title)
+        ical_event.add('dtstart', event.start_time.replace(tzinfo=timezone.utc))
+        ical_event.add('dtend', event.end_time.replace(tzinfo=timezone.utc))
+        ical_event.add('dtstamp', timezone.now())
+        ical_event.add('created', timezone.now())
+        ical_event.add('last-modified', timezone.now())
+        ical_event.add('uid', f'{event.id}@{request.get_host()}')
+        if hasattr(event, 'description'):
+            ical_event.add('description', event.description)
+        
+        cal.add_component(ical_event)
+    
+    response = HttpResponse(cal.to_ical(), content_type='text/calendar; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="calendar.ics"'
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response

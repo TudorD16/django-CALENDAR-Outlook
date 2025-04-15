@@ -7,7 +7,7 @@ SECRET_KEY = 'your-secret-key-here'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '172.16.16.165']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,9 +17,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'calendar_app.apps.CalendarAppConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +66,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Bucharest'
 USE_I18N = True
 USE_TZ = True
 
@@ -79,3 +81,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'calendar'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'home'
+
+CORS_ALLOW_ALL_ORIGINS = True  # For development only
+CORS_ALLOW_CREDENTIALS = True

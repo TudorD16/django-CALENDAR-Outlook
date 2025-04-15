@@ -1,2 +1,4 @@
 django
 icalendar
+ics
+django-cors-headers
